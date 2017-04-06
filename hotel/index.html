@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-default/index.css">
+		<link rel="stylesheet" href="css/kucity.css">
+		<meta charset="utf-8" />
+		<title>index</title>
+		<style>
+			a {
+				text-decoration: none;
+			}
+			:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+			    color: #97a8be;
+			}
+			
+			::-moz-placeholder { /* Mozilla Firefox 19+ */
+			    color: #97a8be;
+			}
+			
+			input:-ms-input-placeholder{
+			    color: #97a8be;
+			}
+			
+			input::-webkit-input-placeholder{
+			    color: #97a8be;
+			}
+			.el-carousel__item h3 {
+				color: #475669;
+				font-size: 14px;
+				opacity: 0.75;
+				line-height: 150px;
+				margin: 0;
+			}
+			
+			.el-carousel__item:nth-child(2n) {
+				background-color: #99a9bf;
+			}
+			
+			.el-carousel__item:nth-child(2n+1) {
+				background-color: #d3dce6;
+			}
+			
+			#app {
+				position: relative;
+			}
+			
+			.h_search_box {
+				position: absolute;
+				top: 60px;
+				left: 150px;
+				width: 300px;
+				height: 300px;
+				background: #fff;
+				z-index: 21;
+			}
+			
+			.search,
+			.search_text {
+				-webkit-font-smoothing: antialiased;
+				-webkit-writing-mode: horizontal-tb;
+				text-align: start;
+				margin: 0em 0em 0em 0em;
+				font: 13.3333px Arial;
+				letter-spacing: normal;
+				word-spacing: normal;
+				text-transform: none;
+				text-indent: 0px;
+				text-shadow: none;
+				text-rendering: auto;
+				-webkit-rtl-ordering: logical; 
+				user-select: text;
+				cursor: auto;
+				background-color: #fff;
+				background-image: none;
+				border-radius: 4px;
+				border: 1px solid #bfcbd9;
+				box-sizing: border-box;
+				color: #1f2d3d;
+				display: block;
+				font-size: inherit;
+				height: 36px;
+				line-height: 1;
+				outline: none;
+				padding: 3px 10px;
+				transition: border-color .2s cubic-bezier(.645, .045, .355, 1);
+				width: 193px;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+				margin-left: 35px;
+			}
+			.search_text {
+				margin-top: 10px;
+			}
+			.h_search_choose {
+				width: 100%;
+				box-sizing: border-box;
+				padding: 20px;
+			}
+			
+			.h_search_choose a {
+				display: inline-block;
+				width: 120px;
+				height: 40px;
+				line-height: 40px;
+				font-size: 18px;
+				color: #000;
+				text-align: center;
+				border-radius: 5px 5px 0 0;
+			}
+			
+			.h_search_choose .active {
+				color: #bf0000;
+				border-bottom: 2px solid #BF0000;
+			}
+			
+			.h_search_choose a:hover {
+				background: #eee;
+			}
+			
+			.date1,.date2 {
+				margin-left: 35px;
+				margin-top: 10px;
+			}
+			.search_btn {
+				color: #fff;
+			    background-color: #20a0ff;
+			    border-color: #20a0ff;
+			    display: block;
+			    width: 100px;
+			    line-height: 26px;
+			    margin: 10px auto;
+			    border: none;
+			    outline: none;
+			    border-radius: 4px;
+			}
+			.search_btn:active {
+				opacity: .8;
+			}
+		</style>
+	</head>
+
+	<body>
+		<section class="banner">
+			<div id="app">
+				<el-carousel trigger="click" height="400px">
+					<el-carousel-item v-for="item in 6">
+					</el-carousel-item>
+				</el-carousel>
+			</div>
+			<div class="h_search_box">
+				<nav class="h_search_choose">
+					<a href="javascript:;" class="active">直连酒店</a>
+					<a href="javascript:;">预付酒店</a>
+				</nav>
+				<input type="text" name="" class="search" value="" placeholder="请输入或选择目的地" />
+				<div class="elm">
+					<el-date-picker class="date1" v-model="value1" :editable="false" @change="change1" type="date" placeholder="入住时间" :picker-options="pickerOptions0">
+					</el-date-picker>
+					<el-date-picker class="date2" v-model="value2" :editable="false" @change="change2" type="date" placeholder="离店时间" :picker-options="pickerOptions1">
+					</el-date-picker>
+				</div>
+				<input type="text" name="" class="search_text" value="" placeholder="酒店名称/地点/关键字" />
+				<button class="search_btn">查询</button>
+			</div>
+		</section>
+		
+		<script src="https://unpkg.com/vue/dist/vue.js"></script>
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+		<script src="http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>
+		<script src="js/kucity.js"></script>
+		<script>
+			$('.search').kuCity();
+			new Vue({
+		      el: '#app',
+		      data: function(){
+		        return { visible: false }
+		      }
+		    })
+			new Vue({
+				el: '.elm',
+				data: function() {
+					let that = this
+					return {
+						visible: false,
+						pickerOptions0: {
+							disabledDate(time) {
+								return time.getTime() < Date.now() - 8.64e7;
+							}
+						},
+						pickerOptions1: {
+							disabledDate(time) {
+								return time.getTime()- 3600*1000*24 < that.value1;
+							}
+						},
+						value1: '',
+						value2: ''
+					}
+				},
+				methods: {
+					change1: function() {
+						console.log(this.value1)
+					},
+					change2: function() {
+						console.log(this.value2)
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>
